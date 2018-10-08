@@ -61,16 +61,17 @@ class BulkReader
     void read()
     {
       Bulk bulk;
-      bulk.reserve(bulkSize);
+      bulk.reserve(m_bulkSize);
 
       for(std::string line; std::getline(std::cin, line);) {
-        if (bulk.size() < bulkSize) {
-          bulk.emplace_back(line);
-        }
-        else {
-          notify(bulk);
-          bulk.clear();
-        }
+//        if (line == "{") TODO FSM?
+
+        bulk.emplace_back(line);
+        if (bulk.size() < m_bulkSize)
+          continue;
+
+        notify(bulk);
+        bulk.clear();
       }
     }
 
@@ -105,7 +106,7 @@ int main(int argc, char* argv[])
 {
   try
   {
-    BulkReader reader{maxBulkSize};
+    BulkReader reader{maxBulkSize}; //TODO maxBulkSize get from cmd line
     BulkProcessor processor{reader};
     BulkLogger logger{reader};
 
