@@ -3,11 +3,11 @@
 #include <chrono>
 #include <ostream>
 #include <string>
-#include <vector>
+#include <list>
 
 namespace hw7 {
 
-using Bulk = std::vector<std::string>;
+using Bulk = std::list<std::string>;
 using BulkTime = std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>;
 
 struct BulkObserver

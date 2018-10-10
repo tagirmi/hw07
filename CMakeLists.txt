@@ -11,7 +11,9 @@ project(bulk VERSION 0.0.${BUILD})
 #find_package(GTest REQUIRED)
 #find_package(Threads REQUIRED)
 
-add_executable(${PROJECT_NAME} "main.cpp" "bulk_reader.cpp" "bulk_processor.cpp" "bulk_logger.cpp")
+file(GLOB_RECURSE SOURCES *.cpp *.h)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 

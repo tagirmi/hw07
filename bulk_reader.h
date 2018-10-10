@@ -7,63 +7,26 @@
 
 namespace hw7 {
 
-class BulkReader;
-
 namespace details {
 
-class ReaderState
-{
-  public:
-    explicit ReaderState(BulkReader&);
-
-    virtual void handle(const std::string&);
-
-  protected:
-    BulkReader& m_reader;
-};
-
-class EmptyBulk : public ReaderState
-{
-  public:
-    void handle(const std::string&) override;
-};
-
-class NotReadyBulk : public ReaderState
-{
-  public:
-    void handle(const std::string&) override;
-};
-
-class ReadyBulk : public ReaderState
-{
-  public:
-    void handle(const std::string&) override;
-};
+class BulkCollector;
 
 }
 
 class BulkReader
 {
-  public:
-    explicit BulkReader(int bulkSize);
+public:
+  explicit BulkReader(size_t bulkSize);
+  ~BulkReader();
 
-    void subscribe(BulkObserver*);
-    void read();
+  void subscribe(BulkObserver*);
+  void read();
 
-  private:
-    void changeState(std::unique_ptr<details::ReaderState>);
-    void notify();
-    void createBulk();
-    void addCommand(const std::string&);
-    bool isBulkReady() const;
+private:
+  void notify(const BulkTime&, const Bulk&);
 
-    std::list<BulkObserver*> m_observers;
-    std::unique_ptr<details::ReaderState> m_currentState;
-    int m_bulkSize;
-    Bulk m_bulk;
-    BulkTime m_bulkTime;
-
-    friend class details::ReaderState;
+  std::list<BulkObserver*> m_observers;
+  std::unique_ptr<details::BulkCollector> m_bulkCollector;
 };
 
 } // hw7
