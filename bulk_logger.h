@@ -7,7 +7,7 @@ namespace hw7 {
 class BulkLogger : public BulkObserver
 {
   public:
-    void update(const std::tuple<BulkTime, Bulk>&) override;
+    void update(const BulkTime&, const Bulk&) override;
 };
 
 } // hw7

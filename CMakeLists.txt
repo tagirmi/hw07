@@ -8,26 +8,26 @@ endif()
 
 project(bulk VERSION 0.0.${BUILD})
 
-#find_package(GTest REQUIRED)
-#find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+find_package(Threads REQUIRED)
 
-add_executable(${PROJECT_NAME} "main.cpp" "bulk_reader.cpp" "bulk_processor.cpp" "bulk_logger.cpp")
+add_executable(${PROJECT_NAME} main.cpp bulk_reader.cpp bulk_processor.cpp bulk_logger.cpp bulk_collector.cpp)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
 # unit tests
-#include_directories(${GTEST_INCLUDE_DIR})
-#add_executable(test_bulk test_bulk.cpp)
-#target_link_libraries(test_bulk ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
+include_directories(${GTEST_INCLUDE_DIR})
+add_executable(test_bulk_collector test_bulk_collector.cpp bulk_collector.cpp)
+target_link_libraries(test_bulk_collector ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties(${PROJECT_NAME} test_bulk_collector PROPERTIES
   CXX_STANDARD 14
   CXX_STANDARD_REQUIRED ON
   COMPILE_OPTIONS -Wpedantic -Wall -Wextra
 )
 
-#enable_testing()
-#add_test(TestBulk test_bu)
+enable_testing()
+add_test(TestBulkCollector test_bulk_collector)
 
 set(CPACK_GENERATOR DEB)
 

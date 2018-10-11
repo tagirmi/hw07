@@ -14,11 +14,11 @@ std::string getBulkLogName(const hw7::BulkTime& time)
 
 }
 
-void hw7::BulkLogger::update(const std::tuple<BulkTime, Bulk>& bulk)
+void hw7::BulkLogger::update(const BulkTime& time, const Bulk& bulk)
 {
-  std::ofstream fs{getBulkLogName(std::get<0>(bulk))};
+  std::ofstream fs{getBulkLogName(time)};
 
-  fs << std::get<1>(bulk);
+  fs << bulk;
 
   fs.close();
 }

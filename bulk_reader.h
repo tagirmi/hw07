@@ -1,25 +1,32 @@
 #pragma once
 
-#include <vector>
+#include <list>
+#include <memory>
 
 #include "bulk.h"
 
 namespace hw7 {
 
+namespace details {
+
+class BulkCollector;
+
+} // details
+
 class BulkReader
 {
-  public:
-    explicit BulkReader(int bulkSize);
+public:
+  explicit BulkReader(size_t bulkSize);
+  ~BulkReader();
 
-    void subscribe(BulkObserver*);
+  void subscribe(BulkObserver*);
+  void read();
 
-    void read();
+private:
+  void notify(const BulkTime&, const Bulk&);
 
-  private:
-    void notify(const BulkTime&, const Bulk&);
-
-    int m_bulkSize;
-    std::vector<BulkObserver*> m_observers;
+  std::list<BulkObserver*> m_observers;
+  std::unique_ptr<details::BulkCollector> m_bulkCollector;
 };
 
 } // hw7

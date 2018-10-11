@@ -3,18 +3,16 @@
 #include <chrono>
 #include <ostream>
 #include <string>
-#include <vector>
-#include <tuple>
-
+#include <list>
 
 namespace hw7 {
 
-using Bulk = std::vector<std::string>;
+using Bulk = std::list<std::string>;
 using BulkTime = std::chrono::time_point<std::chrono::system_clock, std::chrono::seconds>;
 
 struct BulkObserver
 {
-  virtual void update(const std::tuple<BulkTime, Bulk>&) = 0;
+  virtual void update(const BulkTime&, const Bulk&) = 0;
   virtual ~BulkObserver() = default;
 };
 

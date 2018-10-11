@@ -6,11 +6,11 @@ namespace hw7 {
 
 class BulkProcessor : public BulkObserver
 {
-  public:
-    BulkProcessor() = default;
-    ~BulkProcessor() = default;
+public:
+  BulkProcessor() = default;
+  ~BulkProcessor() = default;
 
-    void update(const std::tuple<BulkTime, Bulk>&) override;
+  void update(const BulkTime&, const Bulk&) override;
 };
 
 } // hw7

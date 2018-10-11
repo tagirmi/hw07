@@ -1,9 +1,17 @@
 #include <cassert>
+#include <functional>
 #include <iostream>
 
 #include "bulk_reader.h"
+#include "bulk_collector.h"
 
-hw7::BulkReader::BulkReader(int bulkSize) : m_bulkSize{bulkSize}, m_observers{}
+hw7::BulkReader::BulkReader(size_t bulkSize)
+  : m_observers{}
+{
+  m_bulkCollector = std::make_unique<details::BulkCollector>(bulkSize, std::bind(&BulkReader::notify, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+hw7::BulkReader::~BulkReader()
 {
 }
 
@@ -16,23 +24,14 @@ void hw7::BulkReader::subscribe(BulkObserver* observer)
 
 void hw7::BulkReader::read()
 {
-  Bulk bulk;
-  bulk.reserve(m_bulkSize);
+  for(std::string cmd; std::getline(std::cin, cmd);)
+    m_bulkCollector->add(cmd);
 
-  for(std::string line; std::getline(std::cin, line);) {
-    //        if (line == "{") TODO FSM?
-
-    bulk.emplace_back(line);
-    if (bulk.size() < m_bulkSize)
-      continue;
-
-    notify(std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()), bulk);
-    bulk.clear();
-  }
+  m_bulkCollector->endData();
 }
 
-void hw7::BulkReader::notify(const BulkTime& time, const hw7::Bulk& bulk)
+void hw7::BulkReader::notify(const BulkTime& bulkTime, const Bulk& bulk)
 {
   for (auto& i : m_observers)
-    i->update(std::make_tuple(time, bulk));
+    i->update(bulkTime, bulk);
 }

@@ -2,7 +2,7 @@
 
 #include "bulk_processor.h"
 
-void hw7::BulkProcessor::update(const std::tuple<BulkTime, Bulk>& bulk)
+void hw7::BulkProcessor::update(const BulkTime&, const Bulk& bulk)
 {
-  std::cout << std::get<1>(bulk);
+  std::cout << bulk;
 }
