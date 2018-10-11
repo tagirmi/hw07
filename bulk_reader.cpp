@@ -1,4 +1,5 @@
 #include <cassert>
+#include <functional>
 #include <iostream>
 
 #include "bulk_reader.h"
@@ -7,10 +8,7 @@
 hw7::BulkReader::BulkReader(size_t bulkSize)
   : m_observers{}
 {
-  auto f = [this] (const BulkTime& bulkTime, const Bulk& bulk) {
-    notify(bulkTime, bulk);
-  };
-  m_bulkCollector = std::make_unique<details::BulkCollector>(bulkSize, f);
+  m_bulkCollector = std::make_unique<details::BulkCollector>(bulkSize, std::bind(&BulkReader::notify, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 hw7::BulkReader::~BulkReader()

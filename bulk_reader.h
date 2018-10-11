@@ -11,7 +11,7 @@ namespace details {
 
 class BulkCollector;
 
-}
+} // details
 
 class BulkReader
 {

@@ -7,6 +7,7 @@
 #include "bulk.h"
 
 namespace hw7 {
+
 namespace details {
 
 class BulkState;
@@ -83,5 +84,6 @@ public:
   void endData(BulkCollector&) override;
 };
 
-}
-}
+} // details
+
+} // hw7
