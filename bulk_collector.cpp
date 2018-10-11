@@ -98,9 +98,8 @@ void hw7::details::DynamicBulk::add(BulkCollector& collector, const std::string&
   }
 }
 
-void hw7::details::DynamicBulk::endData(BulkCollector& collector)
+void hw7::details::DynamicBulk::endData(BulkCollector&)
 {
-  collector.processBulk();
 }
 
 void hw7::details::FixedBulk::onEnter(BulkCollector&)

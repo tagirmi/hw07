@@ -66,6 +66,24 @@ TEST(TestBulkCollector, EndData)
   EXPECT_EQ(toString(bulk), "cmd1");
 }
 
+TEST(TestBulkCollector, Bulks)
+{
+  std::vector<hw7::Bulk> bulks;
+  auto process = [&bulks](const hw7::BulkTime&, const hw7::Bulk& b){ bulks.emplace_back(b); };
+  BulkCollector collector{3, process};
+
+  collector.add("cmd1");
+  collector.add("cmd2");
+  collector.add("cmd3");
+  collector.add("cmd4");
+  collector.add("cmd5");
+  collector.endData();
+
+  EXPECT_EQ(bulks.size(), 2);
+  EXPECT_EQ(toString(bulks[0]), "cmd1cmd2cmd3");
+  EXPECT_EQ(toString(bulks[1]), "cmd4cmd5");
+}
+
 TEST(TestBulkCollector, JumpToDynamicBulk)
 {
   hw7::Bulk bulk;
@@ -120,18 +138,17 @@ TEST(TestBulkCollector, NestedBracketsInDynamicBulk)
 
   collector.add("{");
   collector.add("cmd1");
-  collector.add("{");
   collector.add("cmd2");
-  collector.add("}");
-  collector.add("cmd3");
   collector.add("{");
+  collector.add("cmd3");
   collector.add("cmd4");
-  collector.add("cmd5");
   collector.add("}");
+  collector.add("cmd5");
+  collector.add("cmd6");
   collector.add("}");
 
   EXPECT_FALSE(bulk.empty());
-  EXPECT_EQ(toString(bulk), "cmd1cmd2cmd3cmd4cmd5");
+  EXPECT_EQ(toString(bulk), "cmd1cmd2cmd3cmd4cmd5cmd6");
 }
 
 TEST(TestBulkCollector, EndDataDynamicBulk)
@@ -148,8 +165,7 @@ TEST(TestBulkCollector, EndDataDynamicBulk)
   collector.add("cmd5");
   collector.endData();
 
-  EXPECT_FALSE(bulk.empty());
-  EXPECT_EQ(toString(bulk), "cmd1cmd2cmd3cmd4cmd5");
+  EXPECT_TRUE(bulk.empty());
 }
 
 TEST(TestBulkCollector, CommonBulkAfterDynamicBulk)
