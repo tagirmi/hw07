@@ -2,8 +2,8 @@
 
 namespace {
 
-constexpr char* openBracket = "{";
-constexpr char* closeBracket = "}";
+const char* openBracket = "{";
+const char* closeBracket = "}";
 
 }
 
@@ -88,11 +88,10 @@ void hw7::details::DynamicBulk::add(BulkCollector& collector, const std::string&
     ++m_nestedBracketCount;
   }
   else if (cmd == closeBracket) {
-    --m_nestedBracketCount;
-
-    if (m_nestedBracketCount == 0) {
+    if (m_nestedBracketCount > 0)
+      --m_nestedBracketCount;
+    else
       collector.setState(std::make_unique<PreparedBulk>());
-    }
   }
   else {
     collector.addToBulk(cmd);

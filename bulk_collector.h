@@ -64,7 +64,7 @@ public:
   void endData(BulkCollector&) override;
 
 private:
-  int m_nestedBracketCount{0};
+  size_t m_nestedBracketCount{0};
 };
 
 class FixedBulk : public BulkState
