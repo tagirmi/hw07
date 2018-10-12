@@ -42,7 +42,7 @@ private:
 class BulkState
 {
 public:
-  ~BulkState() = default;
+  virtual ~BulkState() = default;
 
   virtual void onEnter(BulkCollector&) = 0;
   virtual void add(BulkCollector&, const std::string&) = 0;

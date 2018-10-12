@@ -8,7 +8,8 @@
 hw7::BulkReader::BulkReader(size_t bulkSize)
   : m_observers{}
 {
-  m_bulkCollector = std::make_unique<details::BulkCollector>(bulkSize, std::bind(&BulkReader::notify, this, std::placeholders::_1, std::placeholders::_2));
+  using namespace std::placeholders;
+  m_bulkCollector = std::make_unique<details::BulkCollector>(bulkSize, std::bind(&BulkReader::notify, this, _1, _2));
 }
 
 hw7::BulkReader::~BulkReader()
@@ -24,7 +25,7 @@ void hw7::BulkReader::subscribe(BulkObserver* observer)
 
 void hw7::BulkReader::read()
 {
-  for(std::string cmd; std::getline(std::cin, cmd);)
+  for (std::string cmd; std::getline(std::cin, cmd);)
     m_bulkCollector->add(cmd);
 
   m_bulkCollector->endData();
