@@ -4,5 +4,5 @@
 
 void hw7::BulkProcessor::update(const BulkTime&, const Bulk& bulk)
 {
-  std::cout << bulk;
+  std::cout << bulk << std::endl;
 }
