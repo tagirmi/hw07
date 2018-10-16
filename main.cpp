@@ -31,13 +31,13 @@ int main(int argc, char* argv[])
 {
   try
   {
-    hw7::BulkProcessor processor;
-    hw7::BulkLogger logger;
-
     hw7::BulkReader reader{parseArg(argc, argv)};
 
-    reader.subscribe(&processor);
-    reader.subscribe(&logger);
+    auto processor = std::make_shared<hw7::BulkProcessor>();
+    auto logger = std::make_shared<hw7::BulkLogger>();
+
+    reader.subscribe(processor);
+    reader.subscribe(logger);
 
     reader.read();
   }

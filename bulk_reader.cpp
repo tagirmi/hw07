@@ -16,7 +16,7 @@ hw7::BulkReader::~BulkReader()
 {
 }
 
-void hw7::BulkReader::subscribe(BulkObserver* observer)
+void hw7::BulkReader::subscribe(const std::shared_ptr<BulkObserver>& observer)
 {
   assert(observer);
 
@@ -33,6 +33,9 @@ void hw7::BulkReader::read()
 
 void hw7::BulkReader::notify(const BulkTime& bulkTime, const Bulk& bulk)
 {
-  for (auto& i : m_observers)
-    i->update(bulkTime, bulk);
+  for (auto& i : m_observers) {
+    auto p = i.lock();
+    if (p)
+      p->update(bulkTime, bulk);
+  }
 }
