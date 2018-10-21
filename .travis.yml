@@ -1,0 +1,34 @@
+language: cpp
+compiler: gcc
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-7
+      - g++-7
+
+install:
+  - sudo apt-get install libgtest-dev
+  - cd /usr/src/gtest
+  - sudo env "PATH=$PATH" cmake .
+  - sudo make
+  - sudo cp *.a /usr/lib
+  - cd "${TRAVIS_BUILD_DIR}"
+
+script:
+  - export CC=gcc-7
+  - export CXX=g++-7
+  - cmake .
+  - cmake --build .
+  - cmake --build . --target test
+  - cmake --build . --target package
+  
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script:
+    - curl -T bulk-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -utagirmi:$BINTRAY_API_KEY "https://api.bintray.com/content/tagirmi/hw07/bulk/$TRAVIS_BUILD_NUMBER/bulk-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+
